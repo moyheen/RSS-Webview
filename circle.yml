@@ -20,10 +20,10 @@ dependencies:
         - export TERM="dumb"; if [ -e ./gradlew ]; then ./gradlew clean dependencies -stacktrace;else gradle clean dependencies -stacktrace;fi
 
 #Pull any submodules
-checkout:
-  post:
-    - git submodule init
-    - git submodule update
+#checkout:
+#  post:
+#    - git submodule init
+#    - git submodule update
 
 test:
     override:
