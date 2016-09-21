@@ -1,50 +1,23 @@
+#
+# Build configuration for Circle CI
+#
+
+general:
+    artifacts:
+        - /home/ubuntu/RSS-Webview/app/build/outputs/apk/
+
 machine:
-   environment:
-     ANDROID_HOME: /usr/local/android-sdk-linux
+    java:
+        version: oraclejdk8
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
 
 dependencies:
-    pre:
-        - echo y | android list sdk
-        - echo y | android update sdk --no-ui --all --filter "tools"
-        - echo y | android update sdk --no-ui --all --filter "platform-tools"
-        - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.2"
-        - echo y | android update sdk --no-ui --all --filter "android-24"
-        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
-        - echo y | android update sdk --no-ui --all --filter "extra-android-support"
-        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
-        - cp -r ${HOME}/$RSS-Webview/android-sdk-license $ANDROID_HOME
-        - (./gradlew -version):
-                    timeout: 360
     override:
-        #- ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
-        - export TERM="dumb"; if [ -e ./gradlew ]; then ./gradlew clean dependencies -stacktrace;else gradle clean dependencies -stacktrace;fi
-
-#Pull any submodules
-#checkout:
-#  post:
-#    - git submodule init
-#    - git submodule update
+        - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-24.0.2,android-21,extra-google-m2repository,extra-google-google_play_services,extra-android-support
+        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
     override:
-        - ./gradlew assembleDebug
-        - emulator -avd circleci-android22 -no-audio -no-window:
-            background: true
-            parallel: true
-        # wait for it to have booted
-        - circle-android wait-for-boot
-        # run tests  against the emulator.
-        - ./gradlew connectedAndroidTest
-
-           # start the emulator
-            - emulator -avd circleci-android22 -no-audio -no-window:
-                background: true
-                parallel: true
-            # wait for it to have booted
-            - circle-android wait-for-boot
-            # run tests  against the emulator.
-            - ./gradlew connectedAndroidTest
-            # copy the build outputs to artifacts
-            - cp -r RSS-Webview/build/outputs $CIRCLE_ARTIFACTS
-            # copy the test results to the test results directory.
-            - cp -r RSS-Webview/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
+        - (./gradlew assemble):
+            timeout: 360
