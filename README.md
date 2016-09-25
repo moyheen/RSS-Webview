@@ -1,4 +1,4 @@
-<img src="https://circleci.com/gh/:owner/:repo.svg?style=shield&circle-token=:circle-token">
+![Build Status](https://circleci.com/gh/moyheen/RSS-Webview.svg?style=shield&circle-token=e3912d41145a0e90ba522ed8cd91009137c55ed6)
 
 # RSS-Webview
 This is a sample application created to populate a webview with a url from a Recyclerview.
